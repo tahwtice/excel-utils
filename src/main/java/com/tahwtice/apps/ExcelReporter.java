@@ -1,4 +1,4 @@
 package com.tahwtice.apps;
 
-public class ExcelParser {
+public class ExcelReporter {
 }
