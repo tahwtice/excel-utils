@@ -28,10 +28,12 @@ public class ExcelParser {
                 // For each row, iterate through all the columns
                 Iterator<Cell> cellIterator = row.cellIterator();
 
+                StringBuilder str = new StringBuilder();
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
-                    System.out.println(cell.getStringCellValue());
+                    str.append(cell.getStringCellValue()).append("   ");
                 }
+                System.out.println(str);
             }
 
             file.close();
