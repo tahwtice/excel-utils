@@ -6,11 +6,9 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelReporter {
@@ -21,10 +19,10 @@ public class ExcelReporter {
 
     public void export() {
         // Blank workbook
-        XSSFWorkbook workbook = new XSSFWorkbook();
+        Workbook workbook = new XSSFWorkbook();
 
         // Create a blank sheet
-        XSSFSheet sheet = workbook.createSheet("Cricketer Data");
+        Sheet sheet = workbook.createSheet("Cricketer Data");
 
         // This data needs to be written (Object[])
         Map<String, Object[]> data = new TreeMap<>();
@@ -38,16 +36,6 @@ public class ExcelReporter {
         Set<String> keySet = data.keySet();
         int rowNum = 1;
 
-        // Create a Font for styling header cells
-        Font headerFont = workbook.createFont();
-        headerFont.setBold(true);
-        headerFont.setFontHeightInPoints((short) 14);
-        headerFont.setColor(IndexedColors.RED.getIndex());
-
-        // Create a CellStyle with the font
-        CellStyle headerCellStyle = workbook.createCellStyle();
-        headerCellStyle.setFont(headerFont);
-
         // Create a Header Row
         Row headerRow = sheet.createRow(0);
 
@@ -55,7 +43,6 @@ public class ExcelReporter {
         for (int i = 0; i < columns.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(columns[i]);
-            cell.setCellStyle(headerCellStyle);
         }
 
         for (String key : keySet) {
