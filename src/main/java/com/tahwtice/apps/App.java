@@ -9,9 +9,9 @@ public class App {
         ExcelParser parser = new ExcelParser();
         parser.parse();
 
-        System.out.println("Begin to generate Excel...");
-
-        ExcelReporter reporter = new ExcelReporter();
-        reporter.export();
+        // System.out.println("Begin to generate Excel...");
+        //
+        // ExcelReporter reporter = new ExcelReporter();
+        // reporter.export();
     }
 }

@@ -1,39 +1,59 @@
 package com.tahwtice.apps;
 
 import java.io.FileInputStream;
-import java.util.Iterator;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.tahwtice.apps.model.Order;
 
 public class ExcelParser {
 
-    private static final String EXCEL_PATH = "src/main/resources/src.xlsx";
+    private static final String EXCEL_PATH = "src/main/resources/Order.xls";
+
+    // private static final
 
     public void parse() {
         try {
             FileInputStream file = new FileInputStream(EXCEL_PATH);
 
             // Create Workbook instance holding reference to .xlsx file
-            Workbook workbook = new XSSFWorkbook(file);
+            Workbook workbook = new HSSFWorkbook(file);
 
             // Get first/desired sheet from the workbook
             Sheet sheet = workbook.getSheetAt(0);
 
             // Iterate through each rows one by one
             for (Row row : sheet) {
-                // For each row, iterate through all the columns
-                Iterator<Cell> cellIterator = row.cellIterator();
-
-                StringBuilder str = new StringBuilder();
-                while (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next();
-                    str.append(cell.getStringCellValue()).append("   ");
+                if (row.getRowNum() == 0) {
+                    continue;
                 }
-                System.out.println(str);
+                int count = 0;
+                Order order = new Order();
+                order.setGuid(row.getCell(count++).getStringCellValue());
+                order.setSystemId(row.getCell(count++).getNumericCellValue());
+                order.setOrderDate(LocalDate.parse(row.getCell(count++).getStringCellValue(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                order.setGroup(row.getCell(count++).getStringCellValue());
+                order.setPerson(row.getCell(count++).getStringCellValue());
+                order.setPhone(row.getCell(count++).getStringCellValue());
+                order.setCellphone(row.getCell(count++).getStringCellValue());
+                order.setMail(row.getCell(count++).getStringCellValue());
+                order.setBrand(row.getCell(count++).getStringCellValue());
+                order.setMaterial(row.getCell(count++).getStringCellValue());
+                order.setPackageSize(row.getCell(count++).getStringCellValue());
+                order.setName(row.getCell(count++).getStringCellValue());
+                order.setLevel(row.getCell(count++).getStringCellValue());
+                order.setUnitPrice(Double.parseDouble(row.getCell(count++).getStringCellValue()));
+                order.setQuantity(Double.parseDouble(row.getCell(count++).getStringCellValue()));
+                order.setTotalPrice(Double.parseDouble(row.getCell(count++).getStringCellValue()));
+                order.setSalesOrder(row.getCell(count).getStringCellValue());
+
+                System.out.println(order);
             }
 
             file.close();
