@@ -3,31 +3,33 @@ package com.tahwtice.apps;
 import java.io.FileInputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.tahwtice.apps.model.Billing;
 import com.tahwtice.apps.model.Order;
 
 public class ExcelParser {
 
-    private static final String EXCEL_PATH = "src/main/resources/Order.xls";
+    private static final String EXCEL_PATH_ORDER = "src/main/resources/Order.xls";
+    private static final String EXCEL_PATH_BILLING = "src/main/resources/Billing.xlsx";
 
     // private static final
 
-    public void parse() {
+    public List<Order> parseOrder() {
+        List<Order> list = new ArrayList<>();
+
         try {
-            FileInputStream file = new FileInputStream(EXCEL_PATH);
-
-            // Create Workbook instance holding reference to .xlsx file
+            FileInputStream file = new FileInputStream(EXCEL_PATH_ORDER);
             Workbook workbook = new HSSFWorkbook(file);
-
-            // Get first/desired sheet from the workbook
             Sheet sheet = workbook.getSheetAt(0);
 
-            // Iterate through each rows one by one
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) {
                     continue;
@@ -53,12 +55,57 @@ public class ExcelParser {
                 order.setTotalPrice(Double.parseDouble(row.getCell(count++).getStringCellValue()));
                 order.setSalesOrder(row.getCell(count).getStringCellValue());
 
-                System.out.println(order);
+                list.add(order);
             }
 
             file.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return list;
+    }
+
+    public List<Billing> parseBilling() {
+        List<Billing> list = new ArrayList<>();
+
+        try {
+            FileInputStream file = new FileInputStream(EXCEL_PATH_BILLING);
+            Workbook workbook = new XSSFWorkbook(file);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) {
+                    continue;
+                }
+                int count = 0;
+                Billing billing = new Billing();
+                billing.setBilling(row.getCell(count++).getStringCellValue());
+                billing.setSalesOrder(row.getCell(count++).getStringCellValue());
+                billing.setCustomerPO(row.getCell(count++).getStringCellValue());
+                billing.setPayer(row.getCell(count++).getStringCellValue());
+                billing.setPayerName(row.getCell(count++).getStringCellValue());
+                billing.setMaterialCode(row.getCell(count++).getStringCellValue());
+                billing.setMaterialDescription(row.getCell(count++).getStringCellValue());
+                billing.setUnitPrice(Double.parseDouble(row.getCell(count++).getStringCellValue()));
+                billing.setQuantity(Double.parseDouble(row.getCell(count++).getStringCellValue()));
+                billing.setTotalValue(Double.parseDouble(row.getCell(count++).getStringCellValue()));
+
+                billing.setFinalBilling(row.getCell(count++).getStringCellValue());
+                billing.setFinalQuantity(row.getCell(count++).getNumericCellValue());
+                billing.setFinalTotalValue(row.getCell(count++).getNumericCellValue());
+                billing.setFinalPO(row.getCell(count++).getStringCellValue());
+
+                billing.setItem(Double.parseDouble(row.getCell(count).getStringCellValue()));
+
+                billing.setGuid(billing.getSalesOrder() + billing.getMaterialCode().substring(2));
+
+                list.add(billing);
+            }
+
+            file.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

@@ -1,11 +1,10 @@
 package com.tahwtice.apps;
 
 import java.io.FileOutputStream;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -15,26 +14,38 @@ public class ExcelReporter {
 
     private static final String EXCEL_PATH = "src/main/resources/dist.xlsx";
 
-    private static final String[] columns = {"ID", "FirstName", "LastName"};
+    private static final String[] columns = {"SAP Billing", "Sales Order", "Customer PO", "Payer", "Payer name",
+            "Material code", "Material description", "Unit price", "Quantity", "Total Value", "*结算单号", "数量", "含税金额",
+            "PO(New)", "Item"};
 
     public void export() {
         // Blank workbook
         Workbook workbook = new XSSFWorkbook();
 
         // Create a blank sheet
-        Sheet sheet = workbook.createSheet("Cricketer Data");
+        Sheet sheet = workbook.createSheet("Sheet1");
 
         // This data needs to be written (Object[])
-        Map<String, Object[]> data = new TreeMap<>();
-
-        data.put("2", new Object[] {1, "Sachin", "Tendulkar"});
-        data.put("3", new Object[] {2, "Saurav", "Ganguly"});
-        data.put("4", new Object[] {3, "Rahul", "Dravid"});
-        data.put("5", new Object[] {4, "Virat", "Kohli"});
+        // Map<String, Object[]> data = new TreeMap<>();
+        //
+        // data.put("2", new Object[] {1, "Sachin", "Tendulkar"});
+        // data.put("3", new Object[] {2, "Saurav", "Ganguly"});
+        // data.put("4", new Object[] {3, "Rahul", "Dravid"});
+        // data.put("5", new Object[] {4, "Virat", "Kohli"});
 
         // Iterate over data and write to sheet
-        Set<String> keySet = data.keySet();
-        int rowNum = 1;
+        // Set<String> keySet = data.keySet();
+        // int rowNum = 1;
+
+        // Create a Font for styling header cells
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        // headerFont.setFontHeightInPoints((short) 14);
+        // headerFont.setColor(IndexedColors.RED.getIndex());
+
+        // Create a CellStyle with the font
+        CellStyle headerCellStyle = workbook.createCellStyle();
+        headerCellStyle.setFont(headerFont);
 
         // Create a Header Row
         Row headerRow = sheet.createRow(0);
@@ -43,20 +54,21 @@ public class ExcelReporter {
         for (int i = 0; i < columns.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(columns[i]);
+            cell.setCellStyle(headerCellStyle);
         }
 
-        for (String key : keySet) {
-            Row row = sheet.createRow(rowNum++);
-            Object[] objArr = data.get(key);
-            int cellNum = 0;
-            for (Object obj : objArr) {
-                Cell cell = row.createCell(cellNum++);
-                if (obj instanceof String)
-                    cell.setCellValue((String) obj);
-                else if (obj instanceof Integer)
-                    cell.setCellValue((Integer) obj);
-            }
-        }
+        // for (String key : keySet) {
+        // Row row = sheet.createRow(rowNum++);
+        // Object[] objArr = data.get(key);
+        // int cellNum = 0;
+        // for (Object obj : objArr) {
+        // Cell cell = row.createCell(cellNum++);
+        // if (obj instanceof String)
+        // cell.setCellValue((String) obj);
+        // else if (obj instanceof Integer)
+        // cell.setCellValue((Integer) obj);
+        // }
+        // }
 
         try {
             // Write the workbook in file system
