@@ -17,7 +17,7 @@ public class App {
         List<Billing> billingList = parser.parseBilling();
         billingList.forEach(System.out::println);
 
-        // ExcelReporter reporter = new ExcelReporter();
-        // reporter.export();
+        ExcelReporter reporter = new ExcelReporter();
+        reporter.export(billingList);
     }
 }

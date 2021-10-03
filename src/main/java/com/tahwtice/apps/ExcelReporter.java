@@ -1,6 +1,7 @@
 package com.tahwtice.apps;
 
 import java.io.FileOutputStream;
+import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -10,32 +11,19 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.tahwtice.apps.model.Billing;
+
 public class ExcelReporter {
 
-    private static final String EXCEL_PATH = "src/main/resources/dist.xlsx";
+    private static final String EXCEL_PATH = "src/main/resources/dest.xlsx";
 
     private static final String[] columns = {"SAP Billing", "Sales Order", "Customer PO", "Payer", "Payer name",
             "Material code", "Material description", "Unit price", "Quantity", "Total Value", "*结算单号", "数量", "含税金额",
             "PO(New)", "Item"};
 
-    public void export() {
-        // Blank workbook
+    public void export(List<Billing> billingList) {
         Workbook workbook = new XSSFWorkbook();
-
-        // Create a blank sheet
         Sheet sheet = workbook.createSheet("Sheet1");
-
-        // This data needs to be written (Object[])
-        // Map<String, Object[]> data = new TreeMap<>();
-        //
-        // data.put("2", new Object[] {1, "Sachin", "Tendulkar"});
-        // data.put("3", new Object[] {2, "Saurav", "Ganguly"});
-        // data.put("4", new Object[] {3, "Rahul", "Dravid"});
-        // data.put("5", new Object[] {4, "Virat", "Kohli"});
-
-        // Iterate over data and write to sheet
-        // Set<String> keySet = data.keySet();
-        // int rowNum = 1;
 
         // Create a Font for styling header cells
         Font headerFont = workbook.createFont();
@@ -49,26 +37,48 @@ public class ExcelReporter {
 
         // Create a Header Row
         Row headerRow = sheet.createRow(0);
-
-        // Create cells
         for (int i = 0; i < columns.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(columns[i]);
             cell.setCellStyle(headerCellStyle);
         }
 
-        // for (String key : keySet) {
-        // Row row = sheet.createRow(rowNum++);
-        // Object[] objArr = data.get(key);
-        // int cellNum = 0;
-        // for (Object obj : objArr) {
-        // Cell cell = row.createCell(cellNum++);
-        // if (obj instanceof String)
-        // cell.setCellValue((String) obj);
-        // else if (obj instanceof Integer)
-        // cell.setCellValue((Integer) obj);
-        // }
-        // }
+        // Create contents
+        int rowNum = 1;
+        for (Billing billing : billingList) {
+            Row row = sheet.createRow(rowNum++);
+            int cellNum = 0;
+            Cell cell = row.createCell(cellNum++);
+            cell.setCellValue(billing.getBilling());
+            cell = row.createCell(cellNum++);
+            cell.setCellValue(billing.getSalesOrder());
+            cell = row.createCell(cellNum++);
+            cell.setCellValue(billing.getCustomerPO());
+            cell = row.createCell(cellNum++);
+            cell.setCellValue(billing.getPayer());
+            cell = row.createCell(cellNum++);
+            cell.setCellValue(billing.getPayerName());
+            cell = row.createCell(cellNum++);
+            cell.setCellValue(billing.getMaterialCode());
+            cell = row.createCell(cellNum++);
+            cell.setCellValue(billing.getMaterialDescription());
+            cell = row.createCell(cellNum++);
+            cell.setCellValue(billing.getUnitPrice());
+            cell = row.createCell(cellNum++);
+            cell.setCellValue(billing.getQuantity());
+            cell = row.createCell(cellNum++);
+            cell.setCellValue(billing.getTotalValue());
+            cell = row.createCell(cellNum++);
+            cell.setCellValue(billing.getFinalBilling());
+            cell = row.createCell(cellNum++);
+            cell.setCellValue(billing.getFinalQuantity());
+            cell = row.createCell(cellNum++);
+            cell.setCellValue(billing.getFinalTotalValue());
+            cell = row.createCell(cellNum++);
+            cell.setCellValue(billing.getFinalPO());
+            cell = row.createCell(cellNum);
+            cell.setCellValue(billing.getItem());
+        }
 
         try {
             // Write the workbook in file system
