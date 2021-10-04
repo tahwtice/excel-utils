@@ -15,10 +15,6 @@ public class ExcelService {
     public ExcelService() {
         this.parser = new ExcelParser();
         this.reporter = new ExcelReporter();
-
-        // this.orderList = new ArrayList<>();
-        // this.billingList = new ArrayList<>();
-        // this.finalBillingList = new ArrayList<>();
     }
 
     public final void parse() {
