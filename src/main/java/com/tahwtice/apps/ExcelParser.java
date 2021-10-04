@@ -90,9 +90,8 @@ public class ExcelParser {
                 billing.setQuantity(Double.parseDouble(row.getCell(count++).getStringCellValue()));
                 billing.setTotalValue(Double.parseDouble(row.getCell(count++).getStringCellValue()));
 
-                billing.setFinalBilling(row.getCell(count++).getStringCellValue());
-                billing.setFinalQuantity(row.getCell(count++).getNumericCellValue());
-                billing.setFinalTotalValue(row.getCell(count++).getNumericCellValue());
+                count += 3;
+
                 billing.setFinalPO(row.getCell(count++).getStringCellValue());
 
                 billing.setItem(Double.parseDouble(row.getCell(count).getStringCellValue()));
