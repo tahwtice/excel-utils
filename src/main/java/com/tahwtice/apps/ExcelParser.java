@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -21,7 +20,7 @@ public class ExcelParser {
 
         try {
             FileInputStream file = new FileInputStream(Constants.EXCEL_PATH_ORDER);
-            excel.setWorkbook(new HSSFWorkbook(file));
+            excel.setWorkbook(new XSSFWorkbook(file));
             Sheet sheet = excel.getWorkbook().getSheetAt(0);
 
             for (Row row : sheet) {
@@ -29,13 +28,13 @@ public class ExcelParser {
                     continue;
                 }
                 Order order = new Order();
-                order.setMaterial(row.getCell(8).getStringCellValue());
-                order.setUnitPrice(Double.parseDouble(row.getCell(12).getStringCellValue()));
-                order.setQuantity(Double.parseDouble(row.getCell(13).getStringCellValue()));
-                order.setTotalPrice(Double.parseDouble(row.getCell(14).getStringCellValue()));
-                order.setSalesOrder(row.getCell(15).getStringCellValue());
+                order.setSalesOrder(row.getCell(0).getStringCellValue());
+                order.setMaterialCode(row.getCell(5).getStringCellValue());
+                order.setUnitPrice(Double.parseDouble(row.getCell(7).getStringCellValue()));
+                order.setQuantity(Double.parseDouble(row.getCell(8).getStringCellValue()));
+                order.setTotalValue(Double.parseDouble(row.getCell(9).getStringCellValue()));
 
-                order.setGuid(order.getSalesOrder() + order.getMaterial());
+                order.setGuid(order.getSalesOrder() + order.getMaterialCode());
                 order.setRowIndex(row.getRowNum());
 
                 list.add(order);
@@ -64,7 +63,7 @@ public class ExcelParser {
                     continue;
                 }
                 Billing billing = new Billing();
-                billing.setSalesOrder(row.getCell(1).getStringCellValue());
+                billing.setSalesOrder(row.getCell(2).getStringCellValue());
                 billing.setMaterialCode(row.getCell(5).getStringCellValue());
                 billing.setUnitPrice(Double.parseDouble(row.getCell(7).getStringCellValue()));
                 billing.setQuantity(Double.parseDouble(row.getCell(8).getStringCellValue()));

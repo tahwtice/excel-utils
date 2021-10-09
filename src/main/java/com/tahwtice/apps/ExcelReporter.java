@@ -8,7 +8,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 public class ExcelReporter {
 
-    public void exportOrigin(Workbook workbook) {
+    public void exportOrigin(Workbook workbook, String path) {
         try {
             Sheet sheet = workbook.getSheetAt(0);
             int count = sheet.getLastRowNum();
@@ -21,7 +21,7 @@ public class ExcelReporter {
                 }
             }
 
-            FileOutputStream out = new FileOutputStream(Constants.EXCEL_PATH_BILLING);
+            FileOutputStream out = new FileOutputStream(path);
             workbook.write(out);
             out.close();
             System.out.println("File written successfully");

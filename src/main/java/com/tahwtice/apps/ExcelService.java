@@ -1,5 +1,7 @@
 package com.tahwtice.apps;
 
+import java.util.Optional;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -33,17 +35,29 @@ public class ExcelService {
 
     public final void vLookUp() {
         this.orderExcel.getItems().forEach(order -> {
-            Billing billing = this.billingService.findBillingByGuid(order.getGuid());
+            Optional<Billing> billingOptional = this.billingService.findBillingByGuid(order.getGuid());
+            if (!billingOptional.isPresent()) {
+                order.setDeleted(false);
+                return;
+            }
+
+            Billing billing = billingOptional.get();
             billing.setDeleted(false);
 
             Sheet sheet = this.billingExcel.getWorkbook().getSheetAt(0);
             Row row = sheet.getRow(billing.getRowIndex());
             row.getCell(11).setCellValue(billing.getQuantity());
-            row.getCell(12).setCellValue(order.getTotalPrice());
+            row.getCell(12).setCellValue(order.getTotalValue());
 
-            if (Math.abs(billing.getTotalValue() - order.getTotalPrice()) <= DISCREPANCY) {
+            if (Math.abs(billing.getTotalValue() - order.getTotalValue()) <= DISCREPANCY) {
                 row.getCell(10).setCellValue(FINAL_BILLING);
             }
+        });
+
+        this.orderExcel.getItems().stream().filter(Order::isDeleted).forEach(item -> {
+            Sheet sheet = this.orderExcel.getWorkbook().getSheetAt(0);
+            Row row = sheet.getRow(item.getRowIndex());
+            sheet.removeRow(row);
         });
 
         this.billingExcel.getItems().stream().filter(Billing::isDeleted).forEach(item -> {
@@ -55,6 +69,7 @@ public class ExcelService {
 
     public final void export() {
         this.billingExcel.getItems().stream().filter(item -> !item.isDeleted()).forEach(System.out::println);
-        this.reporter.exportOrigin(this.billingExcel.getWorkbook());
+        this.reporter.exportOrigin(this.billingExcel.getWorkbook(), Constants.EXCEL_PATH_BILLING);
+        this.reporter.exportOrigin(this.orderExcel.getWorkbook(), Constants.EXCEL_PATH_ORDER);
     }
 }
