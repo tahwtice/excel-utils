@@ -9,10 +9,10 @@ import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.tahwtice.apps.model.Billing;
+import com.tahwtice.apps.model.Excel;
 import com.tahwtice.apps.model.Order;
 
 public class ExcelParser {
@@ -20,15 +20,14 @@ public class ExcelParser {
     private static final String EXCEL_PATH_ORDER = "src/main/resources/Order.xls";
     private static final String EXCEL_PATH_BILLING = "src/main/resources/Billing.xlsx";
 
-    // private static final
-
-    public List<Order> parseOrder() {
+    public Excel<Order> parseOrder() {
+        Excel<Order> excel = new Excel<>();
         List<Order> list = new ArrayList<>();
 
         try {
             FileInputStream file = new FileInputStream(EXCEL_PATH_ORDER);
-            Workbook workbook = new HSSFWorkbook(file);
-            Sheet sheet = workbook.getSheetAt(0);
+            excel.setWorkbook(new HSSFWorkbook(file));
+            Sheet sheet = excel.getWorkbook().getSheetAt(0);
 
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) {
@@ -55,6 +54,8 @@ public class ExcelParser {
                 order.setTotalPrice(Double.parseDouble(row.getCell(count++).getStringCellValue()));
                 order.setSalesOrder(row.getCell(count).getStringCellValue());
 
+                order.setRowIndex(row.getRowNum());
+
                 list.add(order);
             }
 
@@ -62,16 +63,19 @@ public class ExcelParser {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return list;
+
+        excel.setItems(list);
+        return excel;
     }
 
-    public List<Billing> parseBilling() {
+    public Excel<Billing> parseBilling() {
+        Excel<Billing> excel = new Excel<>();
         List<Billing> list = new ArrayList<>();
 
         try {
             FileInputStream file = new FileInputStream(EXCEL_PATH_BILLING);
-            Workbook workbook = new XSSFWorkbook(file);
-            Sheet sheet = workbook.getSheetAt(0);
+            excel.setWorkbook(new XSSFWorkbook(file));
+            Sheet sheet = excel.getWorkbook().getSheetAt(0);
 
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) {
@@ -89,14 +93,11 @@ public class ExcelParser {
                 billing.setUnitPrice(Double.parseDouble(row.getCell(count++).getStringCellValue()));
                 billing.setQuantity(Double.parseDouble(row.getCell(count++).getStringCellValue()));
                 billing.setTotalValue(Double.parseDouble(row.getCell(count++).getStringCellValue()));
-
-                count += 3;
-
-                billing.setFinalPO(row.getCell(count++).getStringCellValue());
-
+                count += 4;
                 billing.setItem(Double.parseDouble(row.getCell(count).getStringCellValue()));
 
                 billing.setGuid(billing.getSalesOrder() + billing.getMaterialCode().substring(2));
+                billing.setRowIndex(row.getRowNum());
 
                 list.add(billing);
             }
@@ -105,6 +106,8 @@ public class ExcelParser {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return list;
+
+        excel.setItems(list);
+        return excel;
     }
 }

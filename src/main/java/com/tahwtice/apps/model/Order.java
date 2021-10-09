@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class Order {
     private String guid;
+
     private double systemId;
     private LocalDate orderDate;
     private String group;
@@ -23,4 +24,6 @@ public class Order {
     private double quantity;
     private double totalPrice;
     private String salesOrder;
+
+    private int rowIndex;
 }

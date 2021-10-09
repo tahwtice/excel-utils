@@ -1,9 +1,10 @@
 package com.tahwtice.apps;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 
 import com.tahwtice.apps.model.Billing;
+import com.tahwtice.apps.model.Excel;
 import com.tahwtice.apps.model.Order;
 
 public class ExcelService {
@@ -14,25 +15,26 @@ public class ExcelService {
     private final ExcelReporter reporter;
     private final BillingService billingService;
 
-    private List<Order> orderList;
-    private final List<Billing> finalBillingList;
+    private Excel<Order> orderExcel;
+    private Excel<Billing> billingExcel;
 
     public ExcelService() {
         this.parser = new ExcelParser();
         this.reporter = new ExcelReporter();
         this.billingService = new BillingService();
-
-        this.finalBillingList = new ArrayList<>();
     }
 
     public final void parse() {
-        this.orderList = this.parser.parseOrder();
-        this.billingService.setBillingList(this.parser.parseBilling());
+        this.orderExcel = this.parser.parseOrder();
+        this.billingExcel = this.parser.parseBilling();
+
+        this.billingService.setBillingList(this.billingExcel.getItems());
     }
 
     public final void vLookUp() {
-        this.orderList.forEach(order -> {
+        this.orderExcel.getItems().forEach(order -> {
             Billing billing = this.billingService.findBillingByGuid(order.getGuid());
+            billing.setDeleted(false);
             double finalTotalValue = billing.getTotalValue();
             if (Math.abs(billing.getTotalValue() - order.getTotalPrice()) <= DISCREPANCY) {
                 finalTotalValue = order.getTotalPrice();
@@ -41,12 +43,16 @@ public class ExcelService {
             billing.setFinalBilling(FINAL_BILLING);
             billing.setFinalTotalValue(finalTotalValue);
             billing.setFinalQuantity(billing.getQuantity());
-            this.finalBillingList.add(billing);
+        });
+        this.billingExcel.getItems().stream().filter(Billing::isDeleted).forEach(item -> {
+            Sheet sheet = this.billingExcel.getWorkbook().getSheetAt(0);
+            Row row = sheet.getRow(item.getRowIndex());
+            sheet.removeRow(row);
         });
     }
 
     public final void export() {
-        this.finalBillingList.forEach(System.out::println);
-        this.reporter.export(this.finalBillingList);
+        this.billingExcel.getItems().stream().filter(item -> !item.isDeleted()).forEach(System.out::println);
+        this.reporter.exportOrigin(this.billingExcel);
     }
 }

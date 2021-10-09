@@ -12,14 +12,38 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.tahwtice.apps.model.Billing;
+import com.tahwtice.apps.model.Excel;
 
 public class ExcelReporter {
 
-    private static final String EXCEL_PATH = "src/main/resources/dest.xlsx";
+    private static final String EXCEL_PATH = "src/main/resources/Billing copy.xlsx";
 
     private static final String[] columns = {"SAP Billing", "Sales Order", "Customer PO", "Payer", "Payer name",
             "Material code", "Material description", "Unit price", "Quantity", "Total Value", "*结算单号", "数量", "含税金额",
             "PO(New)", "Item"};
+
+    public void exportOrigin(Excel<Billing> billingExcel) {
+        try {
+            Sheet sheet = billingExcel.getWorkbook().getSheetAt(0);
+            int count = sheet.getLastRowNum();
+            Row row;
+            while (count > 0) {
+                count--;
+                row = sheet.getRow(count);
+                if (row == null) {
+                    sheet.shiftRows(count + 1, sheet.getLastRowNum(), -1);
+                }
+            }
+
+            FileOutputStream out = new FileOutputStream(EXCEL_PATH);
+            billingExcel.getWorkbook().write(out);
+            out.close();
+            System.out.println("File written successfully");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void export(List<Billing> billingList) {
         Workbook workbook = new XSSFWorkbook();
@@ -85,10 +109,9 @@ public class ExcelReporter {
             FileOutputStream out = new FileOutputStream(EXCEL_PATH);
             workbook.write(out);
             out.close();
-            System.out.println("****File written successfully*****");
+            System.out.println("File written successfully");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
