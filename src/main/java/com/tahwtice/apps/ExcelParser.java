@@ -5,11 +5,10 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import com.tahwtice.apps.model.Billing;
 import com.tahwtice.apps.model.Excel;
@@ -22,14 +21,9 @@ public class ExcelParser {
             FileInputStream fis = new FileInputStream(srcPath);
             FileOutputStream fos = new FileOutputStream(destPath);
 
-            Workbook workbook;
-            if (srcPath.toLowerCase().endsWith(".xlsx")) {
-                workbook = new XSSFWorkbook(fis);
-            } else {
-                workbook = new HSSFWorkbook(fis);
-            }
-
+            Workbook workbook = WorkbookFactory.create(fis);
             workbook.write(fos);
+
             fos.close();
             fis.close();
             System.out.println("File copied");
@@ -44,7 +38,7 @@ public class ExcelParser {
 
         try {
             FileInputStream fis = new FileInputStream(Constants.EXCEL_PATH_ORDER);
-            excel.setWorkbook(new XSSFWorkbook(fis));
+            excel.setWorkbook(WorkbookFactory.create(fis));
             Sheet sheet = excel.getWorkbook().getSheetAt(0);
 
             for (Row row : sheet) {
@@ -79,7 +73,7 @@ public class ExcelParser {
 
         try {
             FileInputStream fis = new FileInputStream(Constants.EXCEL_PATH_BILLING);
-            excel.setWorkbook(new XSSFWorkbook(fis));
+            excel.setWorkbook(WorkbookFactory.create(fis));
             Sheet sheet = excel.getWorkbook().getSheetAt(0);
 
             for (Row row : sheet) {
