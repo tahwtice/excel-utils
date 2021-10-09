@@ -1,8 +1,6 @@
 package com.tahwtice.apps;
 
 import java.io.FileInputStream;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,27 +28,14 @@ public class ExcelParser {
                 if (row.getRowNum() == 0) {
                     continue;
                 }
-                int count = 0;
                 Order order = new Order();
-                order.setGuid(row.getCell(count++).getStringCellValue());
-                order.setSystemId(row.getCell(count++).getNumericCellValue());
-                order.setOrderDate(LocalDate.parse(row.getCell(count++).getStringCellValue(),
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                order.setGroup(row.getCell(count++).getStringCellValue());
-                order.setPerson(row.getCell(count++).getStringCellValue());
-                order.setPhone(row.getCell(count++).getStringCellValue());
-                order.setCellphone(row.getCell(count++).getStringCellValue());
-                order.setMail(row.getCell(count++).getStringCellValue());
-                order.setBrand(row.getCell(count++).getStringCellValue());
-                order.setMaterial(row.getCell(count++).getStringCellValue());
-                order.setPackageSize(row.getCell(count++).getStringCellValue());
-                order.setName(row.getCell(count++).getStringCellValue());
-                order.setLevel(row.getCell(count++).getStringCellValue());
-                order.setUnitPrice(Double.parseDouble(row.getCell(count++).getStringCellValue()));
-                order.setQuantity(Double.parseDouble(row.getCell(count++).getStringCellValue()));
-                order.setTotalPrice(Double.parseDouble(row.getCell(count++).getStringCellValue()));
-                order.setSalesOrder(row.getCell(count).getStringCellValue());
+                order.setMaterial(row.getCell(8).getStringCellValue());
+                order.setUnitPrice(Double.parseDouble(row.getCell(12).getStringCellValue()));
+                order.setQuantity(Double.parseDouble(row.getCell(13).getStringCellValue()));
+                order.setTotalPrice(Double.parseDouble(row.getCell(14).getStringCellValue()));
+                order.setSalesOrder(row.getCell(15).getStringCellValue());
 
+                order.setGuid(order.getSalesOrder() + order.getMaterial());
                 order.setRowIndex(row.getRowNum());
 
                 list.add(order);
@@ -78,20 +63,12 @@ public class ExcelParser {
                 if (row.getRowNum() == 0) {
                     continue;
                 }
-                int count = 0;
                 Billing billing = new Billing();
-                billing.setBilling(row.getCell(count++).getStringCellValue());
-                billing.setSalesOrder(row.getCell(count++).getStringCellValue());
-                billing.setCustomerPO(row.getCell(count++).getStringCellValue());
-                billing.setPayer(row.getCell(count++).getStringCellValue());
-                billing.setPayerName(row.getCell(count++).getStringCellValue());
-                billing.setMaterialCode(row.getCell(count++).getStringCellValue());
-                billing.setMaterialDescription(row.getCell(count++).getStringCellValue());
-                billing.setUnitPrice(Double.parseDouble(row.getCell(count++).getStringCellValue()));
-                billing.setQuantity(Double.parseDouble(row.getCell(count++).getStringCellValue()));
-                billing.setTotalValue(Double.parseDouble(row.getCell(count++).getStringCellValue()));
-                count += 4;
-                billing.setItem(Double.parseDouble(row.getCell(count).getStringCellValue()));
+                billing.setSalesOrder(row.getCell(1).getStringCellValue());
+                billing.setMaterialCode(row.getCell(5).getStringCellValue());
+                billing.setUnitPrice(Double.parseDouble(row.getCell(7).getStringCellValue()));
+                billing.setQuantity(Double.parseDouble(row.getCell(8).getStringCellValue()));
+                billing.setTotalValue(Double.parseDouble(row.getCell(9).getStringCellValue()));
 
                 billing.setGuid(billing.getSalesOrder() + billing.getMaterialCode().substring(2));
                 billing.setRowIndex(row.getRowNum());

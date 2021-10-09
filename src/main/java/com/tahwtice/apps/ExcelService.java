@@ -55,6 +55,6 @@ public class ExcelService {
 
     public final void export() {
         this.billingExcel.getItems().stream().filter(item -> !item.isDeleted()).forEach(System.out::println);
-        this.reporter.exportOrigin(this.billingExcel);
+        this.reporter.exportOrigin(this.billingExcel.getWorkbook());
     }
 }

@@ -4,15 +4,13 @@ import java.io.FileOutputStream;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-
-import com.tahwtice.apps.model.Billing;
-import com.tahwtice.apps.model.Excel;
+import org.apache.poi.ss.usermodel.Workbook;
 
 public class ExcelReporter {
 
-    public void exportOrigin(Excel<Billing> billingExcel) {
+    public void exportOrigin(Workbook workbook) {
         try {
-            Sheet sheet = billingExcel.getWorkbook().getSheetAt(0);
+            Sheet sheet = workbook.getSheetAt(0);
             int count = sheet.getLastRowNum();
             Row row;
             while (count > 0) {
@@ -24,7 +22,7 @@ public class ExcelReporter {
             }
 
             FileOutputStream out = new FileOutputStream(Constants.EXCEL_PATH_BILLING);
-            billingExcel.getWorkbook().write(out);
+            workbook.write(out);
             out.close();
             System.out.println("File written successfully");
 
