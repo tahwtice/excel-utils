@@ -17,15 +17,12 @@ import com.tahwtice.apps.model.Order;
 
 public class ExcelParser {
 
-    private static final String EXCEL_PATH_ORDER = "src/main/resources/Order.xls";
-    private static final String EXCEL_PATH_BILLING = "src/main/resources/Billing.xlsx";
-
     public Excel<Order> parseOrder() {
         Excel<Order> excel = new Excel<>();
         List<Order> list = new ArrayList<>();
 
         try {
-            FileInputStream file = new FileInputStream(EXCEL_PATH_ORDER);
+            FileInputStream file = new FileInputStream(Constants.EXCEL_PATH_ORDER);
             excel.setWorkbook(new HSSFWorkbook(file));
             Sheet sheet = excel.getWorkbook().getSheetAt(0);
 
@@ -73,7 +70,7 @@ public class ExcelParser {
         List<Billing> list = new ArrayList<>();
 
         try {
-            FileInputStream file = new FileInputStream(EXCEL_PATH_BILLING);
+            FileInputStream file = new FileInputStream(Constants.EXCEL_PATH_BILLING);
             excel.setWorkbook(new XSSFWorkbook(file));
             Sheet sheet = excel.getWorkbook().getSheetAt(0);
 

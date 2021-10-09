@@ -16,8 +16,6 @@ import com.tahwtice.apps.model.Excel;
 
 public class ExcelReporter {
 
-    private static final String EXCEL_PATH = "src/main/resources/Billing copy.xlsx";
-
     private static final String[] columns = {"SAP Billing", "Sales Order", "Customer PO", "Payer", "Payer name",
             "Material code", "Material description", "Unit price", "Quantity", "Total Value", "*结算单号", "数量", "含税金额",
             "PO(New)", "Item"};
@@ -35,7 +33,7 @@ public class ExcelReporter {
                 }
             }
 
-            FileOutputStream out = new FileOutputStream(EXCEL_PATH);
+            FileOutputStream out = new FileOutputStream(Constants.EXCEL_PATH_BILLING);
             billingExcel.getWorkbook().write(out);
             out.close();
             System.out.println("File written successfully");
@@ -106,7 +104,7 @@ public class ExcelReporter {
 
         try {
             // Write the workbook in file system
-            FileOutputStream out = new FileOutputStream(EXCEL_PATH);
+            FileOutputStream out = new FileOutputStream(Constants.EXCEL_PATH_BILLING);
             workbook.write(out);
             out.close();
             System.out.println("File written successfully");

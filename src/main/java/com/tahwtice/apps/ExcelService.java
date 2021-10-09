@@ -35,15 +35,17 @@ public class ExcelService {
         this.orderExcel.getItems().forEach(order -> {
             Billing billing = this.billingService.findBillingByGuid(order.getGuid());
             billing.setDeleted(false);
-            double finalTotalValue = billing.getTotalValue();
-            if (Math.abs(billing.getTotalValue() - order.getTotalPrice()) <= DISCREPANCY) {
-                finalTotalValue = order.getTotalPrice();
-            }
 
-            billing.setFinalBilling(FINAL_BILLING);
-            billing.setFinalTotalValue(finalTotalValue);
-            billing.setFinalQuantity(billing.getQuantity());
+            Sheet sheet = this.billingExcel.getWorkbook().getSheetAt(0);
+            Row row = sheet.getRow(billing.getRowIndex());
+            row.getCell(11).setCellValue(billing.getQuantity());
+            row.getCell(12).setCellValue(order.getTotalPrice());
+
+            if (Math.abs(billing.getTotalValue() - order.getTotalPrice()) <= DISCREPANCY) {
+                row.getCell(10).setCellValue(FINAL_BILLING);
+            }
         });
+
         this.billingExcel.getItems().stream().filter(Billing::isDeleted).forEach(item -> {
             Sheet sheet = this.billingExcel.getWorkbook().getSheetAt(0);
             Row row = sheet.getRow(item.getRowIndex());
