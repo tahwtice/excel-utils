@@ -14,7 +14,6 @@ public class ExcelService {
     private static final String FINAL_BILLING = "AG1004";
 
     private final ExcelParser parser;
-    private final ExcelReporter reporter;
     private final BillingService billingService;
 
     private Excel<Order> orderExcel;
@@ -22,11 +21,17 @@ public class ExcelService {
 
     public ExcelService() {
         this.parser = new ExcelParser();
-        this.reporter = new ExcelReporter();
         this.billingService = new BillingService();
     }
 
+    private void copy() {
+        this.parser.copyExcel(Constants.EXCEL_PATH_TEMPLATE_ORDER, Constants.EXCEL_PATH_ORDER);
+        this.parser.copyExcel(Constants.EXCEL_PATH_TEMPLATE_BILLING, Constants.EXCEL_PATH_BILLING);
+    }
+
     public final void parse() {
+        this.copy();
+
         this.orderExcel = this.parser.parseOrder();
         this.billingExcel = this.parser.parseBilling();
 
@@ -69,7 +74,7 @@ public class ExcelService {
 
     public final void export() {
         this.billingExcel.getItems().stream().filter(item -> !item.isDeleted()).forEach(System.out::println);
-        this.reporter.exportOrigin(this.billingExcel.getWorkbook(), Constants.EXCEL_PATH_BILLING);
-        this.reporter.exportOrigin(this.orderExcel.getWorkbook(), Constants.EXCEL_PATH_ORDER);
+        this.parser.exportOrigin(this.billingExcel.getWorkbook(), Constants.EXCEL_PATH_BILLING);
+        this.parser.exportOrigin(this.orderExcel.getWorkbook(), Constants.EXCEL_PATH_ORDER);
     }
 }
