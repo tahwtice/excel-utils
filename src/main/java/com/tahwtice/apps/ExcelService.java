@@ -10,9 +10,6 @@ import com.tahwtice.apps.model.Excel;
 import com.tahwtice.apps.model.Order;
 
 public class ExcelService {
-    private static final double DISCREPANCY = 0.50;
-    private static final String FINAL_BILLING = "AG1004";
-
     private final ExcelParser parser;
     private final BillingService billingService;
 
@@ -54,8 +51,8 @@ public class ExcelService {
             row.getCell(11).setCellValue(billing.getQuantity());
             row.getCell(12).setCellValue(order.getTotalValue());
 
-            if (Math.abs(billing.getTotalValue() - order.getTotalValue()) <= DISCREPANCY) {
-                row.getCell(10).setCellValue(FINAL_BILLING);
+            if (Math.abs(billing.getTotalValue() - order.getTotalValue()) <= Constants.DISCREPANCY) {
+                row.getCell(10).setCellValue(Constants.FINAL_BILLING);
             }
         });
 
