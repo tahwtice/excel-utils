@@ -38,7 +38,7 @@ public class ExcelService {
     public final void vLookUp() {
         this.orderExcel.getItems().forEach(order -> {
             Optional<Billing> billingOptional = this.billingService.findBillingByGuid(order.getGuid());
-            if (!billingOptional.isPresent()) {
+            if (billingOptional.isEmpty()) {
                 order.setDeleted(false);
                 return;
             }

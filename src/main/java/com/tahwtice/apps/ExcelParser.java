@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -15,6 +16,8 @@ import com.tahwtice.apps.model.Excel;
 import com.tahwtice.apps.model.Order;
 
 public class ExcelParser {
+
+    private static final Map<String, Integer> INDEX_MAP = Constants.PROJECT_CELL_INDEX_MAP.get(Constants.PROJECT_ID);
 
     public void copyExcel(String srcPath, String destPath) {
         try {
@@ -46,11 +49,16 @@ public class ExcelParser {
                     continue;
                 }
                 Order order = new Order();
-                order.setSalesOrder(row.getCell(0).getStringCellValue());
-                order.setMaterialCode(row.getCell(5).getStringCellValue());
-                order.setUnitPrice(Double.parseDouble(row.getCell(7).getStringCellValue()));
-                order.setQuantity(Double.parseDouble(row.getCell(8).getStringCellValue()));
-                order.setTotalValue(Double.parseDouble(row.getCell(9).getStringCellValue()));
+                order.setSalesOrder(
+                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_ORDER_SALES_ORDER)).getStringCellValue());
+                order.setMaterialCode(
+                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_ORDER_MATERIAL_CODE)).getStringCellValue());
+                order.setUnitPrice(Double.parseDouble(
+                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_ORDER_UNIT_PRICE)).getStringCellValue()));
+                order.setQuantity(Double.parseDouble(
+                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_ORDER_QUANTITY)).getStringCellValue()));
+                order.setTotalValue(Double.parseDouble(
+                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_ORDER_TOTAL_VALUE)).getStringCellValue()));
 
                 order.setGuid(order.getSalesOrder() + order.getMaterialCode());
                 order.setRowIndex(row.getRowNum());
@@ -81,11 +89,16 @@ public class ExcelParser {
                     continue;
                 }
                 Billing billing = new Billing();
-                billing.setSalesOrder(row.getCell(2).getStringCellValue());
-                billing.setMaterialCode(row.getCell(5).getStringCellValue());
-                billing.setUnitPrice(Double.parseDouble(row.getCell(7).getStringCellValue()));
-                billing.setQuantity(Double.parseDouble(row.getCell(8).getStringCellValue()));
-                billing.setTotalValue(Double.parseDouble(row.getCell(9).getStringCellValue()));
+                billing.setSalesOrder(
+                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_BILLING_SALES_ORDER)).getStringCellValue());
+                billing.setMaterialCode(
+                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_BILLING_MATERIAL_CODE)).getStringCellValue());
+                billing.setUnitPrice(Double.parseDouble(
+                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_BILLING_UNIT_PRICE)).getStringCellValue()));
+                billing.setQuantity(Double.parseDouble(
+                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_BILLING_QUANTITY)).getStringCellValue()));
+                billing.setTotalValue(Double.parseDouble(
+                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_BILLING_TOTAL_VALUE)).getStringCellValue()));
 
                 billing.setGuid(billing.getSalesOrder() + billing.getMaterialCode().substring(2));
                 billing.setRowIndex(row.getRowNum());
