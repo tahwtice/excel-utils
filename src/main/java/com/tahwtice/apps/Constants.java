@@ -16,7 +16,7 @@ public class Constants {
     public static final String EXCEL_PATH_BILLING = EXCEL_PATH_ROOT + "/Billing.xlsx";
 
     // Step 3: change the final billing code
-    public static final String FINAL_BILLING = "AG1004";
+    public static final String FINAL_BILLING = "CW211110-0007";
     // Step 4: check the discrepancy value
     public static final double DISCREPANCY = 0.50;
 
