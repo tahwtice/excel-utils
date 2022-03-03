@@ -5,18 +5,18 @@ import java.util.Map;
 
 public class Constants {
     // Step 1: change the project id
-    public static final String PROJECT_ID = "BJMU";
+    public static final String PROJECT_ID = "XMU";
 
     public static final String EXCEL_PATH_ROOT = "src/main/resources/" + PROJECT_ID;
 
     // Step 2: check the suffix of file (.xls or .xlsx)
-    public static final String EXCEL_PATH_TEMPLATE_ORDER = EXCEL_PATH_ROOT + "/template/Order.xls";
+    public static final String EXCEL_PATH_TEMPLATE_ORDER = EXCEL_PATH_ROOT + "/template/Order.xlsx";
     public static final String EXCEL_PATH_TEMPLATE_BILLING = EXCEL_PATH_ROOT + "/template/Billing.xlsx";
-    public static final String EXCEL_PATH_ORDER = EXCEL_PATH_ROOT + "/Order.xls";
+    public static final String EXCEL_PATH_ORDER = EXCEL_PATH_ROOT + "/Order.xlsx";
     public static final String EXCEL_PATH_BILLING = EXCEL_PATH_ROOT + "/Billing.xlsx";
 
     // Step 3: change the final billing code
-    public static final String FINAL_BILLING = "CW211110-0007";
+    public static final String FINAL_BILLING = "FINAL_BILLING_PLACEHOLDER";
     // Step 4: check the discrepancy value
     public static final double DISCREPANCY = 0.50;
 
