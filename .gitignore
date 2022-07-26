@@ -7,3 +7,4 @@
 **/*.iml
 **/.vscode
 **/dest.xlsx
+**/.DS_Store

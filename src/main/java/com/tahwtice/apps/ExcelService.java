@@ -44,6 +44,10 @@ public class ExcelService {
             }
 
             Billing billing = billingOptional.get();
+            // billing's delete flag being already set to false means duplicate matched
+            if (!billing.isDeleted()) {
+                System.out.println(billing.getGuid());
+            }
             billing.setDeleted(false);
 
             Sheet sheet = this.billingExcel.getWorkbook().getSheetAt(0);
@@ -55,6 +59,11 @@ public class ExcelService {
                 row.getCell(10).setCellValue(Constants.FINAL_BILLING);
             }
         });
+
+        System.out.println("order sum:" + this.orderExcel.getItems().toArray().length);
+        System.out.println("order deleted:" + this.orderExcel.getItems().stream().filter(Order::isDeleted).toArray().length);
+        System.out.println("billing sum:" + this.billingExcel.getItems().toArray().length);
+        System.out.println("billing deleted:" + this.billingExcel.getItems().stream().filter(Billing::isDeleted).toArray().length);
 
         this.orderExcel.getItems().stream().filter(Order::isDeleted).forEach(item -> {
             Sheet sheet = this.orderExcel.getWorkbook().getSheetAt(0);
