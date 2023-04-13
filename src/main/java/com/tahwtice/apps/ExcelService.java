@@ -46,7 +46,8 @@ public class ExcelService {
             Billing billing = billingOptional.get();
             // billing's delete flag being already set to false means duplicate matched
             if (!billing.isDeleted()) {
-                System.out.println(billing.getGuid());
+                System.out.printf("duplicate matched row (line %d): %s %s%n", billing.getRowIndex() + 1,
+                        billing.getSalesOrder(), billing.getMaterialCode());
             }
             billing.setDeleted(false);
 
@@ -60,10 +61,16 @@ public class ExcelService {
             }
         });
 
-        System.out.println("order sum:" + this.orderExcel.getItems().toArray().length);
-        System.out.println("order deleted:" + this.orderExcel.getItems().stream().filter(Order::isDeleted).toArray().length);
-        System.out.println("billing sum:" + this.billingExcel.getItems().toArray().length);
-        System.out.println("billing deleted:" + this.billingExcel.getItems().stream().filter(Billing::isDeleted).toArray().length);
+        System.out.printf("order sum: %d%n", this.orderExcel.getItems().toArray().length);
+        System.out.printf("order matched: %d%n",
+                this.orderExcel.getItems().stream().filter(Order::isDeleted).toArray().length);
+        System.out.printf("order left: %d%n",
+                this.orderExcel.getItems().stream().filter(item -> !item.isDeleted()).toArray().length);
+        System.out.printf("billing sum: %d%n", this.billingExcel.getItems().toArray().length);
+        System.out.printf("billing deleted: %d%n",
+                this.billingExcel.getItems().stream().filter(Billing::isDeleted).toArray().length);
+        System.out.printf("billing matched: %d%n",
+                this.billingExcel.getItems().stream().filter(item -> !item.isDeleted()).toArray().length);
 
         this.orderExcel.getItems().stream().filter(Order::isDeleted).forEach(item -> {
             Sheet sheet = this.orderExcel.getWorkbook().getSheetAt(0);
@@ -79,7 +86,6 @@ public class ExcelService {
     }
 
     public final void export() {
-        this.billingExcel.getItems().stream().filter(item -> !item.isDeleted()).forEach(System.out::println);
         this.parser.exportOrigin(this.billingExcel.getWorkbook(), Constants.EXCEL_PATH_BILLING);
         this.parser.exportOrigin(this.orderExcel.getWorkbook(), Constants.EXCEL_PATH_ORDER);
     }
