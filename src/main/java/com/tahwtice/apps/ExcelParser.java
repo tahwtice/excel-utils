@@ -53,12 +53,12 @@ public class ExcelParser {
                         row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_ORDER_SALES_ORDER)).getStringCellValue());
                 order.setMaterialCode(
                         row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_ORDER_MATERIAL_CODE)).getStringCellValue());
-                order.setUnitPrice(Double.parseDouble(
-                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_ORDER_UNIT_PRICE)).getStringCellValue()));
-                order.setQuantity(Double.parseDouble(
-                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_ORDER_QUANTITY)).getStringCellValue()));
-                order.setTotalValue(Double.parseDouble(
-                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_ORDER_TOTAL_VALUE)).getStringCellValue()));
+                order.setUnitPrice(
+                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_ORDER_UNIT_PRICE)).getNumericCellValue());
+                order.setQuantity(
+                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_ORDER_QUANTITY)).getNumericCellValue());
+                order.setTotalValue(
+                        row.getCell(INDEX_MAP.get(Constants.CELL_INDEX_ORDER_TOTAL_VALUE)).getNumericCellValue());
 
                 order.setGuid(order.getSalesOrder() + order.getMaterialCode());
                 order.setRowIndex(row.getRowNum());
